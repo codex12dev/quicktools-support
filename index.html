@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QuickTools - All-in-one Android utility app</title>
+  <meta name="description" content="QuickTools is an all-in-one Android utility app for passwords, QR tools, Wi-Fi file sharing, internet speed monitoring, flashlight tools, tasks, and more.">
+  <link rel="icon" type="image/png" href="assets/quicktools-icon.png">
+  <link rel="apple-touch-icon" href="assets/quicktools-icon.png">
+  <style>
+    :root {
+      --bg: #f5f8ff;
+      --bg-soft: #eaf3ff;
+      --card: #ffffff;
+      --text: #132033;
+      --muted: #64748b;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --accent: #0ea5e9;
+      --green: #16a34a;
+      --border: #dbe6f5;
+      --shadow: 0 18px 44px rgba(15, 23, 42, 0.09);
+      --soft-shadow: 0 8px 24px rgba(15, 23, 42, 0.07);
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.16), transparent 34rem),
+        linear-gradient(180deg, var(--bg-soft), var(--bg) 28rem, #ffffff);
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      text-underline-offset: 3px;
+      transition: color 150ms ease;
+    }
+
+    a:hover {
+      color: var(--primary-dark);
+      text-decoration: underline;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .shell {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      padding: 18px 16px 34px;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin: 0 -8px 18px;
+      padding: 10px 8px;
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: max-content;
+      color: #0f172a;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .brand img {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.18);
+    }
+
+    .nav-links {
+      display: none;
+      align-items: center;
+      gap: 18px;
+      color: #334155;
+      font-size: 0.94rem;
+      font-weight: 650;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+    }
+
+    .nav-links a:hover,
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 17px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      color: #ffffff;
+      background: var(--primary);
+      font-size: 0.94rem;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 10px 22px rgba(37, 99, 235, 0.22);
+      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      color: #ffffff;
+      background: var(--primary-dark);
+      text-decoration: none;
+      box-shadow: 0 14px 26px rgba(37, 99, 235, 0.26);
+    }
+
+    .button.secondary {
+      color: var(--primary);
+      background: #ffffff;
+      border-color: #c9d9f4;
+      box-shadow: var(--soft-shadow);
+    }
+
+    .button.secondary:hover {
+      color: var(--primary-dark);
+    }
+
+    .button.small {
+      min-height: 38px;
+      padding: 0 14px;
+      font-size: 0.9rem;
+    }
+
+    .hero {
+      display: grid;
+      gap: 30px;
+      align-items: center;
+      padding: 24px 0 34px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding: 7px 11px;
+      border: 1px solid #cfe0ff;
+      border-radius: 999px;
+      color: #1e40af;
+      background: rgba(255, 255, 255, 0.72);
+      font-size: 0.86rem;
+      font-weight: 750;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      letter-spacing: 0;
+      line-height: 1.12;
+    }
+
+    h1 {
+      max-width: 680px;
+      font-size: clamp(2.55rem, 12vw, 5.8rem);
+    }
+
+    .hero h2 {
+      margin-top: 12px;
+      color: #1e293b;
+      font-size: clamp(1.18rem, 4vw, 1.7rem);
+      font-weight: 800;
+    }
+
+    .hero p,
+    .section-lead {
+      color: var(--muted);
+      font-size: 1.02rem;
+    }
+
+    .hero p {
+      max-width: 640px;
+      margin: 14px 0 0;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 440px;
+      overflow: hidden;
+      border: 1px solid rgba(203, 213, 225, 0.9);
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(14, 165, 233, 0.2), transparent 15rem),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.82), rgba(239, 246, 255, 0.9));
+      box-shadow: var(--shadow);
+    }
+
+    .phone-row {
+      position: absolute;
+      inset: 30px 0 auto;
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      padding: 0 18px;
+    }
+
+    .phone {
+      width: min(220px, 42vw);
+      padding: 9px;
+      border: 1px solid #cbd5e1;
+      border-radius: 28px;
+      background: #111827;
+      box-shadow: 0 22px 50px rgba(15, 23, 42, 0.2);
+      animation: floatUp 5.6s ease-in-out infinite;
+    }
+
+    .phone:nth-child(2) {
+      margin-top: 42px;
+      animation-delay: -2s;
+    }
+
+    .phone img {
+      width: 100%;
+      aspect-ratio: 9 / 19.5;
+      object-fit: cover;
+      border-radius: 21px;
+      background: #0f172a;
+    }
+
+    .visual-caption {
+      position: absolute;
+      right: 18px;
+      bottom: 18px;
+      left: 18px;
+      padding: 15px;
+      border: 1px solid rgba(203, 213, 225, 0.8);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: var(--soft-shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .visual-caption strong {
+      display: block;
+      color: #0f172a;
+      font-size: 1rem;
+    }
+
+    .visual-caption span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    section {
+      padding: 30px 0;
+    }
+
+    .section-head {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(1.65rem, 7vw, 2.5rem);
+    }
+
+    .features {
+      display: grid;
+      gap: 12px;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--soft-shadow);
+    }
+
+    .feature-card {
+      padding: 18px;
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .feature-icon {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      margin-bottom: 12px;
+      place-items: center;
+      border-radius: 12px;
+      color: #ffffff;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      font-weight: 900;
+    }
+
+    .feature-card h3 {
+      font-size: 1rem;
+    }
+
+    .feature-card p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .screenshots {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .shot {
+      overflow: hidden;
+      padding: 7px;
+      border-radius: 23px;
+      background: #0f172a;
+      box-shadow: var(--soft-shadow);
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .shot:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+    }
+
+    .shot img {
+      width: 100%;
+      aspect-ratio: 9 / 19.5;
+      object-fit: cover;
+      border-radius: 17px;
+    }
+
+    .privacy-panel {
+      display: grid;
+      gap: 18px;
+      padding: 22px;
+      border-radius: 26px;
+      background:
+        linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(14, 165, 233, 0.08)),
+        #ffffff;
+    }
+
+    .check-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: #334155;
+    }
+
+    .check-list li {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+    }
+
+    .check-list li::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      margin-top: 8px;
+      flex: 0 0 auto;
+      border-radius: 999px;
+      background: var(--green);
+    }
+
+    .contact-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #ffffff;
+      color: #1e293b;
+      font-weight: 750;
+      text-decoration: none;
+      box-shadow: var(--soft-shadow);
+    }
+
+    .brand:hover,
+    .shot:hover,
+    .contact-link:hover {
+      text-decoration: none;
+    }
+
+    .contact-link span {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 650;
+    }
+
+    .footer {
+      display: grid;
+      gap: 12px;
+      padding: 24px 0 8px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.92rem;
+    }
+
+    .footer strong {
+      color: #0f172a;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 11px 16px;
+    }
+
+    .footer-links a {
+      color: #475569;
+      font-weight: 650;
+      text-decoration: none;
+    }
+
+    @keyframes floatUp {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @media (min-width: 720px) {
+      .shell {
+        padding: 24px 24px 44px;
+      }
+
+      .nav-links {
+        display: flex;
+      }
+
+      .hero {
+        grid-template-columns: 1.05fr 0.95fr;
+        min-height: 640px;
+        padding: 36px 0 52px;
+      }
+
+      .features {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .screenshots {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .privacy-panel {
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        padding: 28px;
+      }
+
+      .contact-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <nav class="nav" aria-label="Main navigation">
+      <a class="brand" href="index.html">
+        <img src="assets/quicktools-icon.png" alt="" aria-hidden="true">
+        <span>QuickTools</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#screenshots">Screenshots</a>
+        <a href="privacy-policy.html">Privacy</a>
+        <a href="delete-account.html">Delete Account</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <a class="button small" href="https://play.google.com/store/apps/details?id=com.codex12dev.quicktools">Get on Play Store</a>
+    </nav>
+
+    <header class="hero">
+      <div>
+        <div class="eyebrow">Clean Android utilities by Codex12dev</div>
+        <h1>QuickTools</h1>
+        <h2>All-in-one utility app for everyday Android tasks.</h2>
+        <p>
+          Generate and save passwords, scan QR codes, share files over Wi-Fi, monitor internet speed,
+          use flashlight tools, manage tasks, and more &mdash; all in one clean app.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="https://play.google.com/store/apps/details?id=com.codex12dev.quicktools">Get on Play Store</a>
+          <a class="button secondary" href="privacy-policy.html">Privacy Policy</a>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-label="QuickTools app screenshots">
+        <div class="phone-row">
+          <div class="phone">
+            <img src="assets/screenshots/ss1.png" alt="QuickTools app screenshot preview">
+          </div>
+          <div class="phone">
+            <img src="assets/screenshots/ss2.png" alt="QuickTools app screenshot preview">
+          </div>
+        </div>
+        <div class="visual-caption">
+          <strong>Fast tools, tidy design</strong>
+          <span>Everyday utilities arranged for quick access and simple control.</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="features">
+        <div class="section-head">
+          <h2>Everything useful, close at hand</h2>
+          <p class="section-lead">QuickTools brings common Android utility workflows into one focused app.</p>
+        </div>
+        <div class="features">
+          <article class="card feature-card">
+            <div class="feature-icon">P</div>
+            <h3>Password Generator &amp; Saved Passwords</h3>
+            <p>Create strong passwords and keep saved entries organized on your device.</p>
+          </article>
+          <article class="card feature-card">
+            <div class="feature-icon">C</div>
+            <h3>Optional Password Backup &amp; Cloud Sync</h3>
+            <p>Choose optional sign-in and encrypted backup when you want cloud restore support.</p>
+          </article>
+          <article class="card feature-card">
+            <div class="feature-icon">Q</div>
+            <h3>QR Scanner &amp; QR Generator</h3>
+            <p>Scan QR codes or create clean QR codes for text, links, and everyday sharing.</p>
+          </article>
+          <article class="card feature-card">
+            <div class="feature-icon">W</div>
+            <h3>Wi-Fi File Server</h3>
+            <p>Move files between devices over your local network without extra setup.</p>
+          </article>
+          <article class="card feature-card">
+            <div class="feature-icon">S</div>
+            <h3>Internet Speed Monitor</h3>
+            <p>Keep an eye on live upload and download speed when you need network visibility.</p>
+          </article>
+          <article class="card feature-card">
+            <div class="feature-icon">F</div>
+            <h3>Flashlight, Widgets &amp; Quick Settings Tiles</h3>
+            <p>Reach flashlight and supported tool actions from the places Android users expect.</p>
+          </article>
+          <article class="card feature-card">
+            <div class="feature-icon">L</div>
+            <h3>Tap to Lock</h3>
+            <p>Lock your device quickly with a dedicated tool and optional shortcuts.</p>
+          </article>
+          <article class="card feature-card">
+            <div class="feature-icon">T</div>
+            <h3>Tasks / Notes</h3>
+            <p>Capture quick tasks and notes locally for simple everyday reminders.</p>
+          </article>
+          <article class="card feature-card">
+            <div class="feature-icon">&#9733;</div>
+            <h3>Favorites and tool customization</h3>
+            <p>Keep your most-used tools close and tailor the app around your workflow.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="screenshots">
+        <div class="section-head">
+          <h2>Screenshots</h2>
+          <p class="section-lead">A quick look at the app experience across tools and settings.</p>
+        </div>
+        <div class="screenshots">
+          <a class="shot" href="assets/screenshots/ss1.png"><img src="assets/screenshots/ss1.png" alt="QuickTools screenshot 1"></a>
+          <a class="shot" href="assets/screenshots/ss2.png"><img src="assets/screenshots/ss2.png" alt="QuickTools screenshot 2"></a>
+          <a class="shot" href="assets/screenshots/ss3.png"><img src="assets/screenshots/ss3.png" alt="QuickTools screenshot 3"></a>
+          <a class="shot" href="assets/screenshots/ss4.png"><img src="assets/screenshots/ss4.png" alt="QuickTools screenshot 4"></a>
+          <a class="shot" href="assets/screenshots/ss5.png"><img src="assets/screenshots/ss5.png" alt="QuickTools screenshot 5"></a>
+          <a class="shot" href="assets/screenshots/ss6.png"><img src="assets/screenshots/ss6.png" alt="QuickTools screenshot 6"></a>
+          <a class="shot" href="assets/screenshots/ss7.png"><img src="assets/screenshots/ss7.png" alt="QuickTools screenshot 7"></a>
+          <a class="shot" href="assets/screenshots/ss8.png"><img src="assets/screenshots/ss8.png" alt="QuickTools screenshot 8"></a>
+        </div>
+      </section>
+
+      <section>
+        <div class="privacy-panel card">
+          <div>
+            <div class="eyebrow">Privacy &amp; control</div>
+            <h2>Built with privacy and control in mind</h2>
+            <p class="section-lead">
+              QuickTools keeps sign-in and Cloud Sync optional, so you stay in control of how you use the app.
+            </p>
+            <div class="hero-actions">
+              <a class="button" href="privacy-policy.html">Privacy Policy</a>
+              <a class="button secondary" href="delete-account.html">Delete Account</a>
+            </div>
+          </div>
+          <ul class="check-list">
+            <li>Most tools work without sign-in.</li>
+            <li>Google Sign-In is optional.</li>
+            <li>Cloud Sync is optional.</li>
+            <li>No ads in the current version.</li>
+            <li>No third-party analytics or user tracking in the current version.</li>
+            <li>Account and cloud data deletion page is available.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="contact">
+        <div class="section-head">
+          <h2>Contact</h2>
+          <p class="section-lead">Reach Codex12dev through email or social channels.</p>
+        </div>
+        <div class="contact-grid">
+          <a class="contact-link" href="mailto:codex12dev@gmail.com">Email <span>Contact</span></a>
+          <a class="contact-link" href="https://www.instagram.com/codex12dev/">Instagram <span>@codex12dev</span></a>
+          <a class="contact-link" href="https://github.com/codex12dev">GitHub <span>codex12dev</span></a>
+          <a class="contact-link" href="https://youtube.com/@CodeX12Dev">YouTube <span>CodeX12Dev</span></a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <strong>QuickTools &bull; Codex12dev</strong>
+      <div class="footer-links">
+        <a href="https://play.google.com/store/apps/details?id=com.codex12dev.quicktools">Play Store</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="delete-account.html">Delete Account</a>
+        <a href="https://www.instagram.com/codex12dev/">Instagram</a>
+        <a href="https://github.com/codex12dev">GitHub</a>
+        <a href="https://youtube.com/@CodeX12Dev">YouTube</a>
+        <a href="mailto:codex12dev@gmail.com">Email</a>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
